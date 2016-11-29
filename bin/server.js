@@ -40,7 +40,7 @@ const index = '<!doctype html>\n' +
 app.use('/public', express.static(path.join(__dirname, '../public')));
 
 
-app.get('*', function(req, res) {
+app.get('/', function(req, res) {
   res.status(200).send(index);
 });
 

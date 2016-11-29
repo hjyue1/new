@@ -47,12 +47,10 @@ var config = {
           ]
         }
     },
-    {
-      test: /\.scss$/,
-      include: path.join(__dirname, 'src'),
-      loader: ExtractTextPlugin.extract('style-loader', 'css!autoprefixer-loader?browsers=last 2 version!sass')
-    }]
- 	},
+    { test: /\.css$/, loader: "style!css-loader!less-loader" },
+    { test: /\.scss$/, loader: ExtractTextPlugin.extract('style-loader', 'css!autoprefixer-loader?browsers=last 2 version!sass')},
+    { test: /\.less$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")}
+    ]},
 
  	plugins: [
     new webpack.optimize.UglifyJsPlugin({
@@ -71,7 +69,7 @@ var config = {
     new webpack.ProgressPlugin(function(percentage, msg) {
       //console.log((percentage * 100) + '%', msg);
     }),
-    new ExtractTextPlugin('[name].css'),
+    new ExtractTextPlugin('main.css'),
   ],
   resolve: {
     // Allow to omit extensions when requiring these files

@@ -32,13 +32,15 @@ var config = {
       test: /\.jsx?$/,
       include: [path.join(__dirname, 'src'),path.join(__dirname, 'bin')],
       loader: "babel-loader",
-      exclude: [nodeModulesPath]
+      exclude: [nodeModulesPath],
+      query: {
+            "presets": ["es2015", "stage-0", "react"]
+        }
     },
-    {
-      test: /\.scss$/,
-      include: path.join(__dirname, 'src'),
-      loader: ExtractTextPlugin.extract('style-loader', 'css!autoprefixer-loader?browsers=last 2 version!sass')
-    }]
+    { test: /\.css$/, loader: "style!css-loader!less-loader" },
+    { test: /\.scss$/,loader: ExtractTextPlugin.extract('style', 'css!autoprefixer-loader?browsers=last 2 version!sass')},
+    { test: /\.less$/, loader: ExtractTextPlugin.extract("style", "css-loader!less-loader")}
+    ]
  	},
 
  	plugins: [
@@ -57,7 +59,7 @@ var config = {
     new webpack.ProgressPlugin(function(percentage, msg) {
       //console.log((percentage * 100) + '%', msg);
     }),
-    new ExtractTextPlugin('[name].css'),
+    new ExtractTextPlugin('main.css'),
   ],
   resolve: {
     // Allow to omit extensions when requiring these files
