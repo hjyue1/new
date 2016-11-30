@@ -29,6 +29,7 @@ class GetCrawlerInfoForm extends Component {
         waitTime: 30, //等待超时的时间
         notice: true, //是否通知手机
         cycleTime: 1, //关注的周期
+        keywords: '', //搜索关键词
     }
 
     handleSubmit=(e) => {
@@ -39,25 +40,20 @@ class GetCrawlerInfoForm extends Component {
                 }
             });
         }
-    //关注时间周期
-    handleCycleTime =(value)=>{
-        this.setState({
-          cycleTime: value,
-        });
-    }
-    handleCycleTime2 =(value)=>{
-        this.props.form.setFieldsValue({'cycle': value})
-        this.setState({
-          cycleTime: value,
-        });
-    }
-    //是否手机通知
-    handleNotice=(value) =>{
-        this.setState({
-            notice: value
-        })
-    }
 
+    handleState =(key, value)=>{
+        this.setState({
+          [key]: value,
+        });
+    }
+        //关注时间周期
+    handleCycleTime =(value)=>{
+        this.props.form.setFieldsValue({'cycleTime': value})
+        this.setState({
+          cycleTime: value,
+        });
+    }
+ 
     normFile=(e) =>{
         if (Array.isArray(e)) {
             return e;
@@ -71,7 +67,7 @@ class GetCrawlerInfoForm extends Component {
           labelCol: { span: 6 },
           wrapperCol: { span: 14 },
         };
-        const {select_web, frequency, waitTime, notice, cycleTime} =this.state;
+        const {select_web, frequency, waitTime, notice, cycleTime, keywords} =this.state;
 
         return ( 
             <Form horizontal onSubmit={this.handleSubmit}>
@@ -102,7 +98,7 @@ class GetCrawlerInfoForm extends Component {
 
                 <FormItem {...formItemLayout} label="是否手机通知">
                     {getFieldDecorator('notice', { valuePropName: 'checked',initialValue: notice })(
-                        <Switch checkedChildren={'开'} unCheckedChildren={'关'} onChange={this.handleNotice}/>
+                        <Switch checkedChildren={'开'} unCheckedChildren={'关'} onChange={this.handleState.bind(this, 'notice')}/>
                     )}
                 </FormItem>
 
@@ -117,12 +113,12 @@ class GetCrawlerInfoForm extends Component {
                 <FormItem {...formItemLayout} label="关注周期">   
                     <div>
                         <Col span={18}>
-                            {getFieldDecorator('cycle', {initialValue:cycleTime})(
-                                <Slider marks={{ 7: '一周', 15: '半月', 30: '一月', 100: '一百天'}} onChange={this.handleCycleTime} />
+                            {getFieldDecorator('cycleTime', {initialValue:cycleTime})(
+                                <Slider marks={{ 7: '一周', 15: '半月', 30: '一月', 100: '一百天'}} onChange={this.handleState.bind(this, 'cycleTime')} />
                             )}
                         </Col>
                         <Col span={4}>
-                            <InputNumber min={1} max={100} style={{ width: '100%' }} value={cycleTime} onChange={this.handleCycleTime2} />
+                            <InputNumber min={1} max={100} style={{ width: '100%' }} value={cycleTime} onChange={this.handleCycleTime} />
                         </Col>
                         <Col span={2}>
                             <span className="ant-form-text" style={{ width: '100%', distextAlign: 'center' }}>天</span>
@@ -131,7 +127,7 @@ class GetCrawlerInfoForm extends Component {
                 </FormItem>
 
                 <FormItem {...formItemLayout} label="关键词">
-                    {getFieldDecorator('keywords', {rules: [{ required: true, message: '请输入搜索的关键词!' }]})(
+                    {getFieldDecorator('keywords', {rules: [{ required: true, message: '请输入搜索的关键词!' }], initialValue:keywords})(
                         <Input />
                     )}
                 </FormItem>
