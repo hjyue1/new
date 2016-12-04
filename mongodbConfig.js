@@ -12,6 +12,7 @@ var ShujuSchema= new Schema({
     , title: String
     , url: String
     , money: String
+    , web_name: String
 });
 module.exports.user = mongoose.model('user', UserSchema);
 module.exports.shuju = mongoose.model('shuju', ShujuSchema);
