@@ -6,7 +6,17 @@ var express = require('express');
 var webpack = require('webpack');
 var React = require('react');
 var ReactDOM =  require('react-dom/server');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+//mongodb数据库
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/liudo_crawler');
+var MongoStore = require('connect-mongo')(session);
+
+
 var Html = require('../src/helpers/Html').default;
+var api = require('../api/routes');
 
 
 global.__DEVELOPMENT__ = process.env.NODE_ENV !== 'production';
@@ -37,15 +47,28 @@ if (__DEVELOPMENT__) {
 const server = new http.Server(app);
 const index = '<!doctype html>\n' +
       ReactDOM.renderToString(<Html/>);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(session({
+  secret: 'liudo_session', //为了安全性的考虑设置secret属性
+  cookie: {maxAge: 1000*60*60}, //设置过期时间
+  resave: true, // 即使 session 没有被修改，也保存 session 值，默认为 true
+  saveUninitialized: false, //
+  store: new MongoStore({
+    url: 'mongodb://localhost/liudo_crawler',
+    touchAfter: 1000*60*60 // time period in seconds
+  })
+}));
 app.use('/public', express.static(path.join(__dirname, '../public')));
 
-
-app.get('/', function(req, res) {
+app.use('/api', api)
+app.get('*', function(req, res) {
   res.status(200).send(index);
 });
-
-app.get('*', function(req, res) {
-  res.status(404).send('Server.js > 404 - Page Not Found');
+app.get('/', function(req, res) {
+  res.status(200).send(index);
 });
 
 app.use((err, req, res, next) => {

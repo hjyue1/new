@@ -1,67 +1,15 @@
-import { combineReducers } from 'redux'
-import {
-  SELECT_REDDIT,
-  INVALIDATE_REDDIT,
-  REQUEST_POSTS, 
-  RECEIVE_POSTS
-} from '../actions'
+import { routerStateReducer } from 'redux-router';
+import { combineReducers } from 'redux';
 
-const selectedReddit = (state = 'reactjs', action) => {
-  switch (action.type) {
-    case SELECT_REDDIT:
-      return action.reddit
-    default:
-      return state
-  }
-}
+import user from '../schemas/user';
+import fromData from '../schemas/from';
 
-const posts = (state = {
-  isFetching: false,
-  didInvalidate: false,
-  items: []
-}, action) => {
-  switch (action.type) {
-    case INVALIDATE_REDDIT:
-      return {
-        ...state,
-        didInvalidate: true
-      }
-    case REQUEST_POSTS:
-      return {
-        ...state,
-        isFetching: true,
-        didInvalidate: false
-      }
-    case RECEIVE_POSTS:
-      return {
-        ...state,
-        isFetching: false,
-        didInvalidate: false,
-        items: action.posts,
-        lastUpdated: action.receivedAt
-      }
-    default:
-      return state
-  }
-}
+// import departments from 'schemas/department';
+// members
+// orders
 
-const postsByReddit = (state = { }, action) => {
-  switch (action.type) {
-    case INVALIDATE_REDDIT:
-    case RECEIVE_POSTS:
-    case REQUEST_POSTS:
-      return {
-        ...state,
-        [action.reddit]: posts(state[action.reddit], action)
-      }
-    default:
-      return state
-  }
-}
-
-const rootReducer = combineReducers({
-  postsByReddit,
-  selectedReddit
-})
-
-export default rootReducer
+export default combineReducers({
+    router: routerStateReducer,
+    user,
+    fromData
+});

@@ -2,20 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import thunk from 'redux-thunk'
-import reducer from './reducers'
+import { ReduxRouter } from 'redux-router'
 import getRoutes from './routes'
-
-const middleware = [ thunk ]
-
-const store = createStore(
-  reducer,
-  applyMiddleware(...middleware)
-)
+import configureStore from './store'
+const store = configureStore()
 
 ReactDOM.render(
   <Provider store={store}>
-  	{getRoutes(store)}
+    {getRoutes}
   </Provider>,
   document.getElementById('main')
 );

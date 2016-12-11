@@ -7,7 +7,7 @@ var cheerio = require('cheerio')
 var sendAliMessage = require ('./SMS_serve').default;
 //链接数据库
 var mongoose = require('mongoose');
-var Shuju = require('./mongodbConfig').shuju;
+var Shuju = require('./src/mongodb/mongodbConfig').shuju; //注意着
 mongoose.Promise = global.Promise
 
 

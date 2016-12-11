@@ -1,25 +1,21 @@
 import React from 'react';
-import { Router, Route, browserHistory, IndexRoute } from 'react-router';
+import {Router,  Route, browserHistory, IndexRoute } from 'react-router';
 
 import App from './containers/App'
-import Asd from './containers/asd'
+import Login from './components/login'
+import Reg from './components/reg'
+import Home from './components/home'
 
-
-
-export default (store) => {
+export default (
 	//store做来验证登录
 	/**
    * Please keep routes in alphabetical order
    */
-  return (
   	<Router history={browserHistory}>
 	    <Route path="/" component={App}>
-	      { /* Home (main) route */ }
-	      
-	    </Route>
-
-	    <Route path="/asd" component={Asd}>
+            <IndexRoute component={ Home }/>
+	      <Route path="login" component={Login}/>  
+	      <Route path="reg" component={Reg}/> 
 	    </Route>
     </Router>
-  );
-}
+) 

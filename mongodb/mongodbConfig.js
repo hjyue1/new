@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
     , ObjectId = Schema.ObjectId;
 
 var UserSchema = new Schema({
-    userid: String
+    userName: String
     , password: String
 });
 var ShujuSchema= new Schema({
@@ -14,5 +14,17 @@ var ShujuSchema= new Schema({
     , money: String
     , web_name: String
 });
+var userShujuSchema= new Schema({
+    userName: String
+    , cycleTime: Number
+    , frequency: Number
+    , iphoneNumber: String
+    , keywords: Array
+    , notice:Boolean
+    , select_web : Array
+    , waitTime : Number
+
+});
 module.exports.user = mongoose.model('user', UserSchema);
+module.exports.userShuju = mongoose.model('userShuju', userShujuSchema);
 module.exports.shuju = mongoose.model('shuju', ShujuSchema);
