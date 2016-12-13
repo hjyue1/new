@@ -13,7 +13,6 @@ var publicPath = path.resolve(__dirname, 'public');
 
 
 var config = {
-	devtool: 'eval',
 	entry: {
     main: [
       // configuration for babel6
