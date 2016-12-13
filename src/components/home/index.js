@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
 import { logout } from '../../actions/login'
 
-import GetCrawlerInfoForm  from '../getCrawlerinfoForm'
+import GetCrawlerInfoForm  from '../getCrawlerInfoForm'
 
 
 
