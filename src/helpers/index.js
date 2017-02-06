@@ -30,7 +30,6 @@ export function getCsrfToken(){
  */
 export function _request(options){
     let request = agent(superagent, Promise)
-
     if(typeof document === 'undefined' && options && options.req &&  options.req.header){
           superagent.Request.prototype.send = SEND
           let _r = {}

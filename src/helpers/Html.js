@@ -36,6 +36,7 @@ export default class Html extends Component {
         </head>
         <body>
           <div id="main"/>
+          <script src={'/public/commons.js?'+ time.getTime()} charSet="UTF-8"/>
           <script src={'/public/main.js?'+ time.getTime()} charSet="UTF-8"/>
         </body>
       </html>

@@ -90,8 +90,8 @@ class GetCrawlerInfoForm extends Component {
           labelCol: { span: 6 },
           wrapperCol: { span: 14 },
         };
-        const {select_web, frequency, waitTime, notice, cycleTime, keywords, iphoneNumber} =this.state;
-
+        let {select_web, frequency, waitTime, notice, cycleTime, keywords, iphoneNumber} =this.state;
+        keywords = keywords && keywords.join(',') ;
         return ( 
             <div>
                 {loadData ? 

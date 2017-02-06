@@ -21,11 +21,20 @@ var config = {
       'webpack-hot-middleware/client?http://localhost:9000/__webpack_hmr',
       // example for single entry point. Multiple Entry bundle example will be added later
       path.join(__dirname, './src/index.js')
+    ],
+    commons: [
+      'react',
+      'react-dom',
+      'react-redux',
+      'react-router',
+      'redux',
+      'redux-thunk'
     ]
   },
   output: {
-    filename: 'main.js',
+    filename: '[name].js',
     path: path.join(__dirname, 'public'),
+    chunkFilename: '[name].[chunkhash:5].chunk.js',
     publicPath: '/public/'
   },
   module: {
@@ -53,6 +62,7 @@ var config = {
     ]},
 
  	plugins: [
+    new webpack.optimize.CommonsChunkPlugin('commons', 'commons.js'),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
@@ -62,7 +72,8 @@ var config = {
       __CLIENT__: true,
       __SERVER__: false,
       __DEVELOPMENT__: true,
-      __DEVTOOLS__: true  // <-------- DISABLE redux-devtools HERE
+      __DEVTOOLS__: true,  // <-------- DISABLE redux-devtools HERE
+      'process.env': {'NODE_ENV': `"${process.env.NODE_ENV}"`}
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),

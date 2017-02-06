@@ -5,13 +5,13 @@ var randomstring = require("randomstring");
 var crypto = require('crypto-browserify');
 var urlencode = require('urlencode');
 
-let sendAliMessage = function(Obj, k){ 
+let sendAliMessage = function(Obj, k, iphoneNumber){ 
     var param = { 
         'Action'            : 'SingleSendSms', 
         'SignName'          : 'liudo网',                         //短信签名名称 
         'TemplateCode'      : 'SMS_32445127', 
-        'RecNum'            : '13138140235',                  //手机号 
-        'ParamString'       : JSON.stringify({"k":k,"webName":Obj.web_name}),//验证码模板里的变量 
+        'RecNum'            : iphoneNumber,                  //手机号 
+        'ParamString'       : JSON.stringify({"k":k,"webName":Obj.select_web_name}),//验证码模板里的变量 
         'Version'           : '2016-09-27', 
         'Format'            : 'JSON', 
         'AccessKeyId'       : 'LTAIGdaxOjeCOiJ4', 

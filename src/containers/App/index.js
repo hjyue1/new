@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router'
 
 import { validation } from '../../actions/login'
 
-import 'antd/dist/antd.less'
+// import 'antd/dist/antd.less'
 import './index.less'
 
 class App extends Component {
