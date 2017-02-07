@@ -6,6 +6,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var mainPath = path.resolve(__dirname, 'src', 'main.js');
 var publicPath = path.resolve(__dirname, 'public');
+//var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 
 
@@ -16,17 +17,18 @@ var config = {
 	entry: {
     main: [
       // configuration for babel6
-      'babel-polyfill',
       // example for single entry point. Multiple Entry bundle example will be added later
       path.join(__dirname, './src/index.js')
     ],
     commons: [
+      'babel-polyfill',
       'react',
       'react-dom',
       'react-redux',
       'react-router',
       'redux',
-      'redux-thunk'
+      'redux-thunk',
+      'redux-router',
     ]
   },
   output: {
@@ -70,6 +72,7 @@ var config = {
       //console.log((percentage * 100) + '%', msg);
     }),
     new ExtractTextPlugin('main.css'),
+    // new BundleAnalyzerPlugin(),
   ],
   resolve: {
     // Allow to omit extensions when requiring these files

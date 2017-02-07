@@ -12,7 +12,7 @@ var ShujuSchema= new Schema({
     , title: String
     , url: String
     , money: String
-    , web_name: String
+    , select_web_name: String
 });
 var userShujuSchema= new Schema({
     userName: String

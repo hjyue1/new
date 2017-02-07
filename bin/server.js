@@ -30,8 +30,11 @@ if (__DEVELOPMENT__) {
   var config = require('../webpack.config');
   var compiler = webpack(config);
   app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: config.output.publicPath
+    publicPath: config.output.publicPath,
+    stats: {
+      colors: true,
+      chunks: false
+    }
   }));
   app.use(require('webpack-hot-middleware')(compiler));
 
@@ -41,7 +44,12 @@ if (__DEVELOPMENT__) {
   //生产环境
   var config = require('../webpack.prod.config');
   var compiler = webpack(config);
-  compiler.run(function(){})
+  compiler.run(function(err, stats){
+    console.log(stats.toString({
+      colors: true,
+      chunks: false
+    }))
+  })
 }
 
 const server = new http.Server(app);

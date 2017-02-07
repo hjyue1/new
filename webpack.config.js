@@ -16,19 +16,20 @@ var config = {
 	devtool: 'eval',
 	entry: {
     main: [
-      // configuration for babel6
-      'babel-polyfill',
       'webpack-hot-middleware/client?http://localhost:9000/__webpack_hmr',
       // example for single entry point. Multiple Entry bundle example will be added later
       path.join(__dirname, './src/index.js')
     ],
     commons: [
+      // configuration for babel6
+      'babel-polyfill',
+      'redux-router',
       'react',
       'react-dom',
       'react-redux',
       'react-router',
       'redux',
-      'redux-thunk'
+      'redux-thunk',
     ]
   },
   output: {
@@ -63,11 +64,11 @@ var config = {
 
  	plugins: [
     new webpack.optimize.CommonsChunkPlugin('commons', 'commons.js'),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false
+    //   }
+    // }),
     new webpack.DefinePlugin({
       __CLIENT__: true,
       __SERVER__: false,
