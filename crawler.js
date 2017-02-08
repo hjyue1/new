@@ -173,6 +173,7 @@ const crawler = (search) => {
     // console.log('----第'+calcNum+'次-------操作开始------------------------关键词为:'+ search.keywords.join(','))
     return new Promise((resolve, reject)=>{
         console.log('111')
+        resolve('crawler')
         // phantomjs.run('--webdriver=4444').then(program => {
         //     let browser = webdriverio.remote(wdOpts);
         //     browser
