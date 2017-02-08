@@ -37,13 +37,13 @@ const waitTime = 10000 //等待时间轮询
 // }
 let dbcon = null;
 let opts =  {
-          server: {
-            socketOptions: {
-              socketTimeoutMS: 0,
-              connectTimeoutMS: 0
+                server: {
+                    socketOptions: {
+                      socketTimeoutMS: 100000,
+                      connectTimeoutMS: 100000
+                    }
+                }
             }
-          }
-        }
 function reConnect(){
         dbcon.on('close', function(){
             dbcon.open("localhost", "liudo_crawler", "27017", opts,function() {
