@@ -18,7 +18,7 @@ const fromData = (req, res) => {
   var data = req.body
   userShuju.update({userName:data.userName}, data , {safe : true, upsert : true}, (err, doc)=> {
     if (err) {console.log('更新表单数据错误')};
-    console.log('The number of updated documents was %d', doc[0]);
+    console.log('更新表单数据*成功*')
     res.send({code:'200', msg:'表单保存成功'})
   })
 };

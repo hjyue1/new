@@ -9,7 +9,7 @@ var sendAliMessage = require ('./SMS_serve').default;
 var mongoose = require('mongoose');
 var Shuju = require('./mongodb/mongodbConfig').shuju; //存储数据
 var userShuju = require('./mongodb/mongodbConfig').userShuju; //初始化用户参数
-mongoose.Promise = global.Promise
+mongoose.Promise = require('bluebird');
 
 var  events = require('events');
 var emitter = new events.EventEmitter();
@@ -54,6 +54,7 @@ function reConnect(){
         })
     }
 
+//打开数据库
 let openDatabase = () => {
     return new Promise((resolve, reject)=>{
         mongoose.connect('mongodb://localhost:27017/liudo_crawler', opts);
@@ -75,10 +76,10 @@ let openDatabase = () => {
             console.log('close-event-to-connect');
         });
         dbcon.on('connecting', function() {
-            console.log('connecting');
+            console.log('connecting1111');
         });
         dbcon.on('connected', function() {
-            console.log('connected');
+            console.log('成功链接数据库');
         });
         dbcon.on('disconnecting', function() {
             console.log('disconnecting');
@@ -87,10 +88,12 @@ let openDatabase = () => {
     })
 }
 
+//递归
 emitter.on('init', function(){
     process.nextTick(function () { init();})
 })
 
+//初始化
 const init = () => {
     return new Promise((resolve, reject)=>{
         userShuju.find({}, function(err, docs) {
@@ -116,6 +119,7 @@ const init = () => {
     })
 }
 
+//遍历多个用户
 const userDate = (obj) => {
     return new Promise( async (resolve, reject)=>{
         let select_web_len= obj.select_web.length
@@ -140,7 +144,7 @@ const userDate = (obj) => {
     })
 }
 
-
+//检查数据是否存在并发送短信
 const handleDate = (findObj, DateItem, keywords, iphoneNumber)=>{
     return new Promise((resolve, reject)=>{
         Shuju.find({title:findObj.title}, function(err, docs) {
@@ -168,12 +172,9 @@ const handleDate = (findObj, DateItem, keywords, iphoneNumber)=>{
     })
 }
 
+//爬取操作
 const crawler = (search) => {
-    // calcNum++
-    // console.log('----第'+calcNum+'次-------操作开始------------------------关键词为:'+ search.keywords.join(','))
     return new Promise((resolve, reject)=>{
-        // console.log('111')
-        // resolve('crawler')
         phantomjs.run('--webdriver=4444').then(program => {
             let browser = webdriverio.remote(wdOpts);
             browser
@@ -183,8 +184,6 @@ const crawler = (search) => {
 
                 let keywordsLen = search.keywords.length
                 console.log('成功取回数据')
-                // console.log('准备开始遍历')
-                // console.log('-有'+keywordsLen+'个关键词:'+search.keywords)
                 for(let i =0;i<html.length;i++) {
                     let $ = cheerio.load(html[i])
                     let info = {
@@ -215,6 +214,7 @@ const crawler = (search) => {
     })
 }
 
+//执行
 openDatabase().then(db => {
     init()
 }).catch(() => {})
