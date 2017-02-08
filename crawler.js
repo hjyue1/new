@@ -148,6 +148,7 @@ const userDate = (obj) => {
 const handleDate = (findObj, DateItem, keywords, iphoneNumber)=>{
     return new Promise((resolve, reject)=>{
         Shuju.find({title:findObj.title}, function(err, docs) {
+            console.log('111111')
             if (!!docs.length) {
                 console.log('数据存在--结束--');
                 resolve(docs)
