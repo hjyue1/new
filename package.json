@@ -71,6 +71,7 @@
     "mpromise": "^0.5.5",
     "node-phantom": "^0.2.5",
     "phantom": "^3.2.0",
+    "phantomjs-prebuilt": "^2.1.14",
     "piping": "^1.0.0-rc.4",
     "randomstring": "^1.1.5",
     "react": "^15.3.2",

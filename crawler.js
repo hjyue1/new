@@ -18,21 +18,73 @@ const defineSelect_web = {
     msd2: {url:'http://www.maishoudang.com/', name: '买手党222222'}
 }
 
+
+const waitTime = 10000 //等待时间轮询
+
+// let openDatabase = () => {
+//     return new Promise((resolve, reject)=>{
+//         mongoose.connect('mongodb://localhost:27017/liudo_crawler', (err, db)=>{
+//             if (!err) {
+//                 console.log('成功链接数据库')
+//                 resolve(db)
+//             }else{
+//                 console.log('链接数据库失败')
+//                 reject()
+//             }
+//         });
+
+//     })
+// }
+let dbcon = null;
+let opts =  {
+          server: {
+            socketOptions: {
+              socketTimeoutMS: 0,
+              connectTimeoutMS: 0
+            }
+          }
+        }
+function reConnect(){
+        dbcon.on('close', function(){
+            dbcon.open("localhost", "liudo_crawler", "27017", opts,function() {
+                console.log('重新连接数据库'); 
+            });
+        })
+    }
+
 let openDatabase = () => {
     return new Promise((resolve, reject)=>{
-        mongoose.connect('mongodb://localhost:27017/liudo_crawler', (err, db)=>{
-            if (!err) {
-                console.log('成功链接数据库')
-                resolve(db)
-            }else{
-                reject()
-            }
+        mongoose.connect('mongodb://localhost:27017/liudo_crawler', opts);
+        dbcon = mongoose.connection;//获取Connection 连接对象
+        dbcon.on('error', function(error) {
+            console.log('数据库连接错误');
+            dbcon.readyState = "disconnected";
+            reConnect();
         });
-
+        //监听关闭事件并重连
+        dbcon.on('disconnected', function() {
+            console.log('断开连接');
+            dbcon.readyState = "disconnected";
+            dbcon.close();
+        });
+        dbcon.on('close', function(err) {
+            dbcon.readyState = "disconnected";
+            reConnect();
+            console.log('close-event-to-connect');
+        });
+        dbcon.on('connecting', function() {
+            console.log('connecting');
+        });
+        dbcon.on('connected', function() {
+            console.log('connected');
+        });
+        dbcon.on('disconnecting', function() {
+            console.log('disconnecting');
+        });
+        resolve(dbcon)
     })
 }
 
-const waitTime = 10000
 
 
 const init = () => {
@@ -116,9 +168,7 @@ const crawler = (search) => {
     // calcNum++
     // console.log('----第'+calcNum+'次-------操作开始------------------------关键词为:'+ search.keywords.join(','))
     return new Promise((resolve, reject)=>{
-        console.log('11111')
         phantomjs.run('--webdriver=4444').then(program => {
-            console.log('22222')
             let browser = webdriverio.remote(wdOpts);
             browser
             .init().then(()=>{console.log('开始链接URL')})
