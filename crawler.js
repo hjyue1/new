@@ -31,7 +31,7 @@ const opts =  {
                 }
             }
 
-const waitTime = 1 //等待时间轮询
+const waitTime = 100 //等待时间轮询
 
 // let openDatabase = () => {
 //     return new Promise((resolve, reject)=>{
@@ -172,48 +172,45 @@ const crawler = (search) => {
     // calcNum++
     // console.log('----第'+calcNum+'次-------操作开始------------------------关键词为:'+ search.keywords.join(','))
     return new Promise((resolve, reject)=>{
-        console.log('111')
-        resolve('crawler')
-        // phantomjs.run('--webdriver=4444').then(program => {
-        //     let browser = webdriverio.remote(wdOpts);
-        //     browser
-        //     .init().then(()=>{console.log('开始链接URL')})
-        //     .url(search.select_web_url)
-        //     .getHTML('.tb-c-li').then(async (html)=>{
+        // console.log('111')
+        // resolve('crawler')
+        phantomjs.run('--webdriver=4444').then(program => {
+            let browser = webdriverio.remote(wdOpts);
+            browser
+            .init().then(()=>{console.log('开始链接URL')})
+            .url(search.select_web_url)
+            .getHTML('.tb-c-li').then(async (html)=>{
 
-        //         let keywordsLen = search.keywords.length
-        //         console.log('成功取回数据')
-        //         // console.log('准备开始遍历')
-        //         // console.log('-有'+keywordsLen+'个关键词:'+search.keywords)
-        //         for(let i =0;i<html.length;i++) {
-        //             let $ = cheerio.load(html[i])
-        //             let info = {
-        //                     select_web_name : search.select_web_name,
-        //                     title : $('h2').find('em').text(),
-        //                     time : new Date().getTime(),
-        //                     url : $('.tb-li-tjly').find('a').attr('href'),
-        //                     money : $('h2').find('i').text()
-        //                 };
-        //             let DateItem = new Shuju();
-        //             DateItem.title = info.title;
-        //             DateItem.time = info.time;
-        //             DateItem.url = info.url;
-        //             DateItem.money = info.money;
-        //             DateItem.select_web_name = info.select_web_name;
-        //             for(let j = 0; j<keywordsLen ;j++) {
-        //                 if(info.title.indexOf(search.keywords[j]) !== -1) { 
-        //                     //找到了。 
-        //                     console.log('找到关键词:'+ search.keywords[j])
-        //                     await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber)
-        //                 }
-        //             }
-        //         }
-        //         resolve('crawler')
-        //         // console.log('----第'+calcNum+'次-------操作------------------------结束')
-        //         // console.log('开始等待'+search.waitTime+'s')
-        //         // setTimeout(()=>{crawler()}, search.waitTime*1000)
-        //     })
-        // })
+                let keywordsLen = search.keywords.length
+                console.log('成功取回数据')
+                // console.log('准备开始遍历')
+                // console.log('-有'+keywordsLen+'个关键词:'+search.keywords)
+                for(let i =0;i<html.length;i++) {
+                    let $ = cheerio.load(html[i])
+                    let info = {
+                            select_web_name : search.select_web_name,
+                            title : $('h2').find('em').text(),
+                            time : new Date().getTime(),
+                            url : $('.tb-li-tjly').find('a').attr('href'),
+                            money : $('h2').find('i').text()
+                        };
+                    let DateItem = new Shuju();
+                    DateItem.title = info.title;
+                    DateItem.time = info.time;
+                    DateItem.url = info.url;
+                    DateItem.money = info.money;
+                    DateItem.select_web_name = info.select_web_name;
+                    for(let j = 0; j<keywordsLen ;j++) {
+                        if(info.title.indexOf(search.keywords[j]) !== -1) { 
+                            //找到了。 
+                            console.log('找到关键词:'+ search.keywords[j])
+                            await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber)
+                        }
+                    }
+                }
+                resolve('crawler')
+            })
+        })
     })
 }
 
