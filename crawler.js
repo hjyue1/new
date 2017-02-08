@@ -31,7 +31,7 @@ const opts =  {
                 }
             }
 
-const waitTime = 10000 //等待时间轮询
+const waitTime = 1 //等待时间轮询
 
 // let openDatabase = () => {
 //     return new Promise((resolve, reject)=>{
@@ -88,7 +88,7 @@ let openDatabase = () => {
 }
 
 emitter.on('init', function(){
-    init();
+    process.nextTick(function () { init();})
 })
 
 const init = () => {
