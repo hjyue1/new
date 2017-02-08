@@ -146,30 +146,27 @@ const userDate = (obj) => {
 
 //检查数据是否存在并发送短信
 const handleDate = (findObj, DateItem, keywords, iphoneNumber)=>{
-    return new Promise((resolve, reject)=>{
-        Shuju.find({title:findObj.title}, function(err, docs) {
-            if (!!docs.length) {
-                //console.log('该条信息--:'+info.title+'--存在了');
-                console.log('数据存在--结束--');
-                resolve(docs)
-            }else{
-                DateItem.save(function(err, docs) {
-                    if (!err) {
-                        if (docs != '') {
-                            console.log('新数据存入数据库（'+findObj.title+'）--完毕--（准备发短信提醒）');
-                            //通知
-                            console.log(keywords)
-                            sendAliMessage(findObj, keywords, iphoneNumber)
-                            resolve(docs)
-                        }
-                    }else{
-                        reject('错误')
-                    }
-                })
-            }
-            
-        });
-    })
+    Shuju.find({title:findObj.title}, function(err, docs) {
+        if (!!docs.length) {
+            //console.log('该条信息--:'+info.title+'--存在了');
+            console.log('数据存在--结束--');
+            return new Promise.resolve(docs)
+        }else{
+            DateItem.save(function(err, docs) {
+                console.log(docs)
+                if (!err && docs != '') {
+                        console.log('新数据存入数据库（'+findObj.title+'）--完毕--（准备发短信提醒）');
+                        //通知
+                        console.log(keywords)
+                        sendAliMessage(findObj, keywords, iphoneNumber)
+                        return new Promise.resolve(docs)
+                }else{
+                    return new Promise.reject('错误')
+                }
+            })
+        }
+        
+    });
 }
 
 //爬取操作
