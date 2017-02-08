@@ -9,6 +9,7 @@
     "start": "NODE_ENV=production HOST=localhost PORT=9000 babel-node server.js",
     "pm2": "NODE_ENV=production HOST=localhost PORT=9000 pm2 start --interpreter babel-node server.js & pm2 start --interpreter babel-node crawler.js ",
     "server": "babel-node crawler.js"
+    "pm2server": "pm2 start --interpreter babel-node crawler.js"
   },
   "author": "",
   "license": "ISC",
