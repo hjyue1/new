@@ -11,13 +11,25 @@ var Shuju = require('./mongodb/mongodbConfig').shuju; //存储数据
 var userShuju = require('./mongodb/mongodbConfig').userShuju; //初始化用户参数
 mongoose.Promise = global.Promise
 
+var  events = require('events');
+var emitter = new events.EventEmitter();
 
-let calcNum = 0;
+let calcNum = 0; //计数
+let dbcon = null;//mongodb
+
 const defineSelect_web = {
     msd: {url:'http://www.maishoudang.com/', name: '买手党'},
     msd2: {url:'http://www.maishoudang.com/', name: '买手党222222'}
 }
 
+const opts =  {
+                server: {
+                    socketOptions: {
+                      socketTimeoutMS: 0,
+                      connectTimeoutMS: 0
+                    }
+                }
+            }
 
 const waitTime = 10000 //等待时间轮询
 
@@ -35,20 +47,10 @@ const waitTime = 10000 //等待时间轮询
 
 //     })
 // }
-let dbcon = null;
-let opts =  {
-                server: {
-                    socketOptions: {
-                      socketTimeoutMS: 100000,
-                      connectTimeoutMS: 100000
-                    }
-                }
-            }
+
 function reConnect(){
         dbcon.on('close', function(){
-            dbcon.open("localhost", "liudo_crawler", "27017", opts,function() {
-                console.log('重新连接数据库'); 
-            });
+            openDatabase()
         })
     }
 
@@ -85,7 +87,9 @@ let openDatabase = () => {
     })
 }
 
-
+emitter.on('init', function(){
+    init();
+})
 
 const init = () => {
     return new Promise((resolve, reject)=>{
@@ -99,7 +103,7 @@ const init = () => {
                         await userDate(docs[i])
                     }  
                     console.log('-----------------------------------操作结束');
-                    setTimeout(()=>{init()}, waitTime)
+                    setTimeout(()=>{emitter.emit('init');}, waitTime)
                     resolve('init')
                 }
                 start()
