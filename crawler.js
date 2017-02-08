@@ -154,6 +154,7 @@ const handleDate = (findObj, DateItem, keywords, iphoneNumber)=>{
                 resolve(docs)
             }else{
                 DateItem.save().then(function(err, docs) {
+                    console.log(err)
                     console.log(docs)
                     if (!err && docs != '') {
                             console.log('新数据存入数据库（'+findObj.title+'）--完毕--（准备发短信提醒）');
