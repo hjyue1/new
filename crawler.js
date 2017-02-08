@@ -181,33 +181,33 @@ const crawler = (search) => {
             .url(search.select_web_url)
             .getHTML('.tb-c-li').then(async (html)=>{
 
-                let keywordsLen = search.keywords.length
-                console.log('成功取回数据')
-                // console.log('准备开始遍历')
-                // console.log('-有'+keywordsLen+'个关键词:'+search.keywords)
-                for(let i =0;i<html.length;i++) {
-                    let $ = cheerio.load(html[i])
-                    let info = {
-                            select_web_name : search.select_web_name,
-                            title : $('h2').find('em').text(),
-                            time : new Date().getTime(),
-                            url : $('.tb-li-tjly').find('a').attr('href'),
-                            money : $('h2').find('i').text()
-                        };
-                    let DateItem = new Shuju();
-                    DateItem.title = info.title;
-                    DateItem.time = info.time;
-                    DateItem.url = info.url;
-                    DateItem.money = info.money;
-                    DateItem.select_web_name = info.select_web_name;
-                    for(let j = 0; j<keywordsLen ;j++) {
-                        if(info.title.indexOf(search.keywords[j]) !== -1) { 
-                            //找到了。 
-                            console.log('找到关键词:'+ search.keywords[j])
-                            await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber)
-                        }
-                    }
-                }
+                // let keywordsLen = search.keywords.length
+                // console.log('成功取回数据')
+                // // console.log('准备开始遍历')
+                // // console.log('-有'+keywordsLen+'个关键词:'+search.keywords)
+                // for(let i =0;i<html.length;i++) {
+                //     let $ = cheerio.load(html[i])
+                //     let info = {
+                //             select_web_name : search.select_web_name,
+                //             title : $('h2').find('em').text(),
+                //             time : new Date().getTime(),
+                //             url : $('.tb-li-tjly').find('a').attr('href'),
+                //             money : $('h2').find('i').text()
+                //         };
+                //     let DateItem = new Shuju();
+                //     DateItem.title = info.title;
+                //     DateItem.time = info.time;
+                //     DateItem.url = info.url;
+                //     DateItem.money = info.money;
+                //     DateItem.select_web_name = info.select_web_name;
+                //     for(let j = 0; j<keywordsLen ;j++) {
+                //         if(info.title.indexOf(search.keywords[j]) !== -1) { 
+                //             //找到了。 
+                //             console.log('找到关键词:'+ search.keywords[j])
+                //             await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber)
+                //         }
+                //     }
+                // }
                 resolve('crawler')
             })
         })
