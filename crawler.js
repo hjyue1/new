@@ -116,9 +116,10 @@ const crawler = (search) => {
     // calcNum++
     // console.log('----第'+calcNum+'次-------操作开始------------------------关键词为:'+ search.keywords.join(','))
     return new Promise((resolve, reject)=>{
+        console.log('11111')
         phantomjs.run('--webdriver=4444').then(program => {
+            console.log('22222')
             let browser = webdriverio.remote(wdOpts);
-
             browser
             .init().then(()=>{console.log('开始链接URL')})
             .url(search.select_web_url)
