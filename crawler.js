@@ -31,7 +31,7 @@ const opts =  {
                 }
             }
 
-const waitTime = 100 //等待时间轮询
+const waitTime = 5000 //等待时间轮询
 
 const getTime = ()=>{
     let date = new Date()
