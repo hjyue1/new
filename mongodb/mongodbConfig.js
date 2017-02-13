@@ -16,8 +16,6 @@ var ShujuSchema= new Schema({
 });
 var userShujuSchema= new Schema({
     userName: String
-    , cycleTime: Number
-    , frequency: Number
     , iphoneNumber: String
     , keywords: Array
     , notice:Boolean
