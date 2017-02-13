@@ -100,6 +100,7 @@ emitter.on('init', function(){
 const init = () => {
     return new Promise((resolve, reject)=>{
         userShuju.find({}, function(err, docs) {
+            console.log(docs)
             if (docs.length > 0) {
                 let len = docs.length;
                 let start = async ()=> {
