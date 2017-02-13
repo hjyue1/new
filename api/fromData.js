@@ -47,10 +47,8 @@ const createData = (userName, docs) => {
     let data = new userShuju();
         data.userName=userName
         data.select_web= []
-        data.frequency=''
-        data.waitTime=''
+        data.waitTime=500
         data.notice=true
-        data.cycleTime=''
         data.keywords=[]
         data.iphoneNumber=''
     return new Promise((resolve, reject)=>{
