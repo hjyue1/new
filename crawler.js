@@ -51,7 +51,7 @@ const devMsg = (msg) => {
 
 function reConnect(){
         dbcon.on('close', function(){
-            openDatabase()
+            start()
         })
     }
 
@@ -106,7 +106,9 @@ const init = () => {
                     calcNum++;
                     devMsg('----第'+calcNum+'次-------操作开始-----------------------------------');
                     for (let i = 0; i<len; i++) {
-                        await userDate(docs[i])
+                        await userDate(docs[i]).catch((err) => {
+                            console.log('userDate------出错了 收集错误'+err)
+                        })
                     }  
                     devMsg('-----------------------------------操作结束');
                     setTimeout(()=>{emitter.emit('init');}, waitTime)
@@ -142,6 +144,8 @@ const userDate = (obj) => {
             await crawler(search).then((e)=>{
                 devMsg('当前用户：'+search.userName+'数据抓取完毕，执行下一个用户')
                 resolve('userDate')
+            }).catch((err) => {
+                console.log('crawler------出错了 收集错误'+err)
             })
         }
     })
@@ -204,7 +208,9 @@ const crawler = (search) => {
                         if(info.title.indexOf(search.keywords[j]) !== -1) { 
                             //找到了。 
                             devMsg('找到关键词:'+ search.keywords[j])
-                            await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber)
+                            await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber).catch((err) => {
+                                console.log('handleDate------出错了 收集错误'+err)
+                            })
                         }
                     }
                 }
@@ -216,7 +222,14 @@ const crawler = (search) => {
 }
 
 //执行
-openDatabase().then(db => {
-    init()
-}).catch(() => {})
+function start() {
+    openDatabase().then(db => {
+        init().catch((err) => {
+            console.log('init--------出错了 收集错误'+err)
+        })
+    }).catch((err) => {
+        console.log('openDatabase------出错了 收集错误'+err)
+    })
+}
+start()
 
