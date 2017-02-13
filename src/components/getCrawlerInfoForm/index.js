@@ -28,10 +28,7 @@ class GetCrawlerInfoForm extends Component {
     state ={
         loadData: false,
         select_web: ['msd'], //关注的网站
-        frequency: 1, //监控的频率
-        waitTime: 30, //等待超时的时间
         notice: true, //是否通知手机
-        cycleTime: 1, //关注的周期
         keywords: '', //搜索关键词
         iphoneNumber: '', //手机号码
     }
@@ -71,13 +68,10 @@ class GetCrawlerInfoForm extends Component {
     async componentWillMount() {
         let { dispatch, user} = this.props;
         let r = await dispatch(loadData(user.userName))
-        let {select_web, frequency, waitTime, notice, cycleTime, keywords, iphoneNumber} = r.response.body[0]; //数组
+        let {select_web, notice, keywords, iphoneNumber} = r.response.body[0]; //数组
         this.setState({
             select_web,
-            frequency,
-            waitTime,
             notice,
-            cycleTime,
             keywords,
             iphoneNumber,
             loadData:true})
@@ -90,7 +84,7 @@ class GetCrawlerInfoForm extends Component {
           labelCol: { span: 6 },
           wrapperCol: { span: 14 },
         };
-        let {select_web, frequency, waitTime, notice, cycleTime, keywords, iphoneNumber} =this.state;
+        let {select_web, notice, keywords, iphoneNumber} =this.state;
         keywords = keywords && keywords.join(',') ;
         return ( 
             <div>
@@ -102,21 +96,6 @@ class GetCrawlerInfoForm extends Component {
                                     <Option value="msd">买手党</Option>
                                 </Select>
                             )}
-                        </FormItem>
-
-                        <FormItem {...formItemLayout} label="监控的频率">
-                            {getFieldDecorator('frequency', { initialValue: frequency })(
-                                <InputNumber min={1} max={100000} />
-                            )}
-                            <span className="ant-form-text"> 分钟/次</span>
-                        </FormItem>
-
-                        <FormItem {...formItemLayout} label="超时时间">   
-                            <span className="ant-form-text">等待</span>
-                            {getFieldDecorator('waitTime', { initialValue: waitTime })(
-                                <InputNumber min={1} max={100} />
-                            )}
-                            <span className="ant-form-text"> S</span>
                         </FormItem>
 
                         <FormItem {...formItemLayout} label="是否手机通知">
@@ -132,22 +111,6 @@ class GetCrawlerInfoForm extends Component {
                                 )}
                             </FormItem>
                         }
-                        
-                        <FormItem {...formItemLayout} label="关注周期">   
-                            <div>
-                                <Col span={18}>
-                                    {getFieldDecorator('cycleTime', {initialValue:cycleTime})(
-                                        <Slider marks={{ 7: '一周', 15: '半月', 30: '一月', 100: '一百天'}} onChange={this.handleState.bind(this, 'cycleTime')} />
-                                    )}
-                                </Col>
-                                <Col span={4}>
-                                    <InputNumber min={1} max={100} style={{ width: '100%' }} value={cycleTime} onChange={this.handleCycleTime} />
-                                </Col>
-                                <Col span={2}>
-                                    <span className="ant-form-text" style={{ width: '100%', distextAlign: 'center' }}>天</span>
-                                </Col>
-                            </div>
-                        </FormItem>
 
                         <FormItem {...formItemLayout} label="关键词">
                             {getFieldDecorator('keywords', {rules: [{ required: true, message: '请输入搜索的关键词!' }], initialValue:keywords})(
