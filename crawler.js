@@ -40,7 +40,7 @@ const opts =  {
             }
 
 const waitTime = 100 //等待时间轮询
-const limit = 100
+const limit = 1000
 
 const getTime = ()=>{
     let date = new Date()
@@ -125,7 +125,7 @@ const init = () => {
                     devMsg('-----------------------------------操作结束');
                     if (calcNum > limit) {
                         console.log('限制100次结束')
-                        
+
 mtrace.gc(); // Optionally force a garbage collect so destructors are called
 mtrace.muntrace();
                         resolve('init')
