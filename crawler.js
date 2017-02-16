@@ -14,6 +14,14 @@ mongoose.Promise = global.Promise;
 var  events = require('events');
 var emitter = new events.EventEmitter();
 
+var mtrace = require('mtrace');
+var filename = mtrace.mtrace();
+if (filename) {
+  console.log('Saving mtrace to ' + filename);
+} else {
+  console.log('mtrace not supported');
+}
+
 let calcNum = 0; //计数
 let dbcon = null;//mongodb
 
@@ -233,4 +241,7 @@ function start() {
     })
 }
 start()
+
+mtrace.gc(); // Optionally force a garbage collect so destructors are called
+mtrace.muntrace();
 

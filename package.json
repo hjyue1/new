@@ -71,6 +71,7 @@
     "less-loader": "^2.2.3",
     "mongoose": "^4.7.0",
     "mpromise": "^0.5.5",
+    "mtrace": "^1.0.5",
     "node-phantom": "^0.2.5",
     "phantom": "^3.2.0",
     "phantomjs-prebuilt": "^2.1.14",
