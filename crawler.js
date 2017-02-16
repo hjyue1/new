@@ -101,7 +101,10 @@ let openDatabase = () => {
 
 //递归
 emitter.on('init', function(){
-    process.nextTick(function () { init();})
+    process.nextTick(function () { 
+        mtrace.mtrace();
+        init();
+    })
 })
 
 //初始化
