@@ -120,6 +120,10 @@ const init = () => {
                         })
                     }  
                     devMsg('-----------------------------------操作结束');
+
+mtrace.gc(); // Optionally force a garbage collect so destructors are called
+mtrace.muntrace();
+
                     setTimeout(()=>{emitter.emit('init');}, waitTime)
                     resolve('init')
                 }
@@ -242,6 +246,4 @@ function start() {
 }
 start()
 
-mtrace.gc(); // Optionally force a garbage collect so destructors are called
-mtrace.muntrace();
 
