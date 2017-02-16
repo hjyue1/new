@@ -15,6 +15,12 @@ var  events = require('events');
 var emitter = new events.EventEmitter();
 
 var mtrace = require('mtrace');
+var filename = mtrace.mtrace();
+            if (filename) {
+              console.log('Saving mtrace to ' + filename);
+            } else {
+              console.log('mtrace not supported');
+            }
 
 let calcNum = 0; //计数
 let dbcon = null;//mongodb
@@ -34,6 +40,7 @@ const opts =  {
             }
 
 const waitTime = 100 //等待时间轮询
+const limit = 100
 
 const getTime = ()=>{
     let date = new Date()
@@ -96,10 +103,6 @@ let openDatabase = () => {
 //递归
 emitter.on('init', function(){
     process.nextTick(function () { 
-
-mtrace.gc(); // Optionally force a garbage collect so destructors are called
-mtrace.muntrace();
-        mtrace.mtrace();
         init();
     })
 })
@@ -108,12 +111,6 @@ mtrace.muntrace();
 const init = () => {
     return new Promise((resolve, reject)=>{
         userShuju.find({}, function(err, docs) {
-            var filename = mtrace.mtrace();
-            if (filename) {
-              console.log('Saving mtrace to ' + filename);
-            } else {
-              console.log('mtrace not supported');
-            }
             console.log(docs)
             if (docs.length > 0) {
                 let len = docs.length;
@@ -126,8 +123,17 @@ const init = () => {
                         })
                     }  
                     devMsg('-----------------------------------操作结束');
-                    setTimeout(()=>{emitter.emit('init');}, waitTime)
-                    resolve('init')
+                    if (calcNum > limit) {
+                        console.log('限制100次结束')
+                        
+mtrace.gc(); // Optionally force a garbage collect so destructors are called
+mtrace.muntrace();
+                        resolve('init')
+                    }else {
+
+                        setTimeout(()=>{emitter.emit('init');}, waitTime)
+                        resolve('init')
+                    }
                 }
                 start()
 
