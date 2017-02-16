@@ -102,6 +102,9 @@ let openDatabase = () => {
 //递归
 emitter.on('init', function(){
     process.nextTick(function () { 
+        
+mtrace.gc(); // Optionally force a garbage collect so destructors are called
+mtrace.muntrace();
         mtrace.mtrace();
         init();
     })
@@ -123,10 +126,6 @@ const init = () => {
                         })
                     }  
                     devMsg('-----------------------------------操作结束');
-
-mtrace.gc(); // Optionally force a garbage collect so destructors are called
-mtrace.muntrace();
-
                     setTimeout(()=>{emitter.emit('init');}, waitTime)
                     resolve('init')
                 }
