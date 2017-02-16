@@ -14,13 +14,7 @@ mongoose.Promise = global.Promise;
 var  events = require('events');
 var emitter = new events.EventEmitter();
 
-var mtrace = require('mtrace');
-var filename = mtrace.mtrace();
-            if (filename) {
-              console.log('Saving mtrace to ' + filename);
-            } else {
-              console.log('mtrace not supported');
-            }
+
 
 let calcNum = 0; //计数
 let dbcon = null;//mongodb
@@ -123,17 +117,9 @@ const init = () => {
                         })
                     }  
                     devMsg('-----------------------------------操作结束');
-                    if (calcNum > limit) {
-                        console.log('限制100次结束')
-
-mtrace.gc(); // Optionally force a garbage collect so destructors are called
-mtrace.muntrace();
-                        resolve('init')
-                    }else {
-
-                        setTimeout(()=>{emitter.emit('init');}, waitTime)
-                        resolve('init')
-                    }
+                    setTimeout(()=>{emitter.emit('init');}, waitTime)
+                    resolve('init')
+                    
                 }
                 start()
 
@@ -207,34 +193,34 @@ const crawler = (search) => {
             .init().then(()=>{devMsg('开始链接URL')})
             .url(search.select_web_url)
             .getHTML('.tb-c-li').then(async (html)=>{
-
+                
                 let keywordsLen = search.keywords.length
                 devMsg('成功取回数据')
-                for(let i =0;i<html.length;i++) {
-                    let $ = cheerio.load(html[i])
-                    let info = {
-                            select_web_name : search.select_web_name,
-                            title : $('h2').find('em').text(),
-                            time : new Date().getTime(),
-                            url : $('.tb-li-tjly').find('a').attr('href'),
-                            money : $('h2').find('i').text()
-                        };
-                    let DateItem = new Shuju();
-                    DateItem.title = info.title;
-                    DateItem.time = info.time;
-                    DateItem.url = info.url;
-                    DateItem.money = info.money;
-                    DateItem.select_web_name = info.select_web_name;
-                    for(let j = 0; j<keywordsLen ;j++) {
-                        if(info.title.indexOf(search.keywords[j]) !== -1) { 
-                            //找到了。 
-                            devMsg('找到关键词:'+ search.keywords[j])
-                            await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber).catch((err) => {
-                                console.log('handleDate------出错了 收集错误'+err)
-                            })
-                        }
-                    }
-                }
+                // for(let i =0;i<html.length;i++) {
+                //     let $ = cheerio.load(html[i])
+                //     let info = {
+                //             select_web_name : search.select_web_name,
+                //             title : $('h2').find('em').text(),
+                //             time : new Date().getTime(),
+                //             url : $('.tb-li-tjly').find('a').attr('href'),
+                //             money : $('h2').find('i').text()
+                //         };
+                //     let DateItem = new Shuju();
+                //     DateItem.title = info.title;
+                //     DateItem.time = info.time;
+                //     DateItem.url = info.url;
+                //     DateItem.money = info.money;
+                //     DateItem.select_web_name = info.select_web_name;
+                //     for(let j = 0; j<keywordsLen ;j++) {
+                //         if(info.title.indexOf(search.keywords[j]) !== -1) { 
+                //             //找到了。 
+                //             devMsg('找到关键词:'+ search.keywords[j])
+                //             await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber).catch((err) => {
+                //                 console.log('handleDate------出错了 收集错误'+err)
+                //             })
+                //         }
+                //     }
+                // }
                 program.kill();
                 resolve('crawler')
             })
