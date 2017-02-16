@@ -15,12 +15,6 @@ var  events = require('events');
 var emitter = new events.EventEmitter();
 
 var mtrace = require('mtrace');
-var filename = mtrace.mtrace();
-if (filename) {
-  console.log('Saving mtrace to ' + filename);
-} else {
-  console.log('mtrace not supported');
-}
 
 let calcNum = 0; //计数
 let dbcon = null;//mongodb
@@ -39,7 +33,7 @@ const opts =  {
                 }
             }
 
-const waitTime = 5000 //等待时间轮询
+const waitTime = 100 //等待时间轮询
 
 const getTime = ()=>{
     let date = new Date()
@@ -102,7 +96,7 @@ let openDatabase = () => {
 //递归
 emitter.on('init', function(){
     process.nextTick(function () { 
-        
+
 mtrace.gc(); // Optionally force a garbage collect so destructors are called
 mtrace.muntrace();
         mtrace.mtrace();
@@ -114,6 +108,12 @@ mtrace.muntrace();
 const init = () => {
     return new Promise((resolve, reject)=>{
         userShuju.find({}, function(err, docs) {
+            var filename = mtrace.mtrace();
+            if (filename) {
+              console.log('Saving mtrace to ' + filename);
+            } else {
+              console.log('mtrace not supported');
+            }
             console.log(docs)
             if (docs.length > 0) {
                 let len = docs.length;
