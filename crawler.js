@@ -118,6 +118,7 @@ let free = () => {
     const free = spawn('free', ['-m']);
     // 捕获标准输出并将其打印到控制台 
     free.stdout.on('data', function(data) {
+        console.log(typeof data);
         console.log('standard output:\n' + data[2][2]);
     });
     // 捕获标准错误输出并将其打印到控制台 
