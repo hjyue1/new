@@ -120,7 +120,7 @@ let free = () => {
     free.stdout.on('data', function(data) {
         let a = typeof data
         let b = Object.keys(data)
-        console.log(data[b[0]])
+        console.log(b)
         console.log(data[b[0][0]])
         console.log(data[b[1]])
         console.log(a);
