@@ -118,12 +118,6 @@ let free = () => {
     const free = spawn('free', ['-m']);
     // 捕获标准输出并将其打印到控制台 
     free.stdout.on('data', function(data) {
-        let a = typeof data
-        let b = Object.keys(data)
-        console.log(b)
-        console.log(data[b[0][0]])
-        console.log(data[b[1]])
-        console.log(a);
         console.log('standard output:\n' + data[2][2]);
     });
     // 捕获标准错误输出并将其打印到控制台 
