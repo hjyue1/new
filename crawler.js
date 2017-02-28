@@ -133,7 +133,10 @@ let free = () => {
 //递归
 emitter.on('init', function() {
     process.nextTick(function() {
-        free();
+        if (calcNum % 100 == 0) {
+            //每100次清理下内存
+            cleanMemory();
+        }
         init();
     })
 })
