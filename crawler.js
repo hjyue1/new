@@ -142,7 +142,7 @@ emitter.on('init', function() {
 const init = () => {
     return new Promise((resolve, reject) => {
         userShuju.find({}, function(err, docs) {
-            console.log(docs)
+            //console.log(docs)
             if (docs.length > 0) {
                 let len = docs.length;
                 let start = async() => {
@@ -171,11 +171,13 @@ const init = () => {
 //遍历多个用户
 const userDate = (obj) => {
     return new Promise(async(resolve, reject) => {
-        let select_web_len = obj.select_web.length
+        //如果数据库没有select_web 就设置下默认
+        let select_web = obj.select_web.length == 0 ? ['msd'] : obj.select_web
+        let select_web_len = select_web.length || ['msd']
         for (let i = 0; i < select_web_len; i++) {
             const search = {
-                select_web_url: defineSelect_web[obj.select_web[i]].url, //关注的网站
-                select_web_name: defineSelect_web[obj.select_web[i]].name, //网站名字
+                select_web_url: defineSelect_web[select_web[i]].url, //关注的网站
+                select_web_name: defineSelect_web[select_web[i]].name, //网站名字
                 frequency: obj.frequency, //监控的频率
                 waitTime: obj.waitTime, //等待超时的时间
                 notice: obj.notice, //是否通知手机
@@ -230,7 +232,7 @@ const crawler = (search) => {
                 .init().then(() => { devMsg('开始链接URL') })
                 .url(search.select_web_url)
                 .getHTML('.tb-c-li').then(async(html) => {
-
+                    console.log(html)
                     let keywordsLen = search.keywords.length
                     devMsg('成功取回数据')
                         // for(let i =0;i<html.length;i++) {
