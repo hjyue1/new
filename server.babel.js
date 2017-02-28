@@ -13,4 +13,3 @@ try {
 }
 
 require('babel-core/register')(config);
-require('./crawler2.js');
