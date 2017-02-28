@@ -118,7 +118,7 @@ let free = () => {
     const free = spawn('free', ['-m']);
     // 捕获标准输出并将其打印到控制台 
     free.stdout.on('data', function(data) {
-        console.log('standard output:\n' + data[2][2]);
+        console.log('standard output:\n' + data);
     });
     // 捕获标准错误输出并将其打印到控制台 
     free.stderr.on('data', function(data) {
@@ -232,7 +232,6 @@ const crawler = (search) => {
                 .init().then(() => { devMsg('开始链接URL') })
                 .url(search.select_web_url)
                 .getHTML('.tb-c-li').then(async(html) => {
-                    console.log(html)
                     let keywordsLen = search.keywords.length
                     devMsg('成功取回数据')
                         // for(let i =0;i<html.length;i++) {
