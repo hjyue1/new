@@ -98,7 +98,9 @@ let openDatabase = () => {
 
 //调用系统命令清理内存
 let cleanMemory = () => {
-    const clean = spawn('echo', ['1', '>', '/proc/sys/vm/drop_caches']);
+    const clean = spawn('echo', ['1', '>', '/proc/sys/vm/drop_caches'], {
+        shell: true
+    });
     // 捕获标准输出并将其打印到控制台 
     clean.stdout.on('data', function(data) {
         console.log('standard output:\n' + data);
@@ -133,7 +135,7 @@ let free = () => {
 //递归
 emitter.on('init', function() {
     process.nextTick(function() {
-        if (calcNum % 100 == 0) {
+        if (calcNum % 5000 == 0) {
             //每100次清理下内存
             cleanMemory();
         }
