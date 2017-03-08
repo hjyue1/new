@@ -136,7 +136,7 @@ let free = () => {
 emitter.on('init', function() {
     process.nextTick(function() {
         if (calcNum % 5000 == 0) {
-            //每100次清理下内存
+            //每5000次清理下内存
             cleanMemory();
         }
         init();
@@ -234,8 +234,9 @@ const crawler = (search) => {
         phantomjs.run('--webdriver=4444').then(program => {
             let browser = webdriverio.remote(wdOpts);
             browser
+                .timeouts('pageLoad', 3600000)
                 .init().then(() => { devMsg('开始链接URL') })
-                .url(search.select_web_url)
+                .url(search.select_web_url).then(() => { devMsg('url地址是:' + search.select_web_url) })
                 .getHTML('.tb-c-li').then(async(html) => {
                     let keywordsLen = search.keywords.length
                     devMsg('成功取回数据')
@@ -266,6 +267,12 @@ const crawler = (search) => {
                     }
                     program.kill();
                     resolve('crawler')
+                })
+                .on('error', function(e) {
+                    // will be executed everytime an error occurred
+                    // e.g. when element couldn't be found
+                    console.log(e.body.value.class);   // -> "org.openqa.selenium.NoSuchElementException"
+                    console.log(e.body.value.message); // -> "no such element ..."
                 })
         })
     })
