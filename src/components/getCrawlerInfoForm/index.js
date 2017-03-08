@@ -15,6 +15,7 @@ import {
     Icon,
     Input,
     Col,
+    message,
 } from 'antd';
 
 
@@ -42,6 +43,11 @@ class GetCrawlerInfoForm extends Component {
                 values.keywords = values.keywords.split(",");
                 values.userName = this.props.user.userName;
                 let r = await this.props.dispatch(sendFromData(values));
+                if(r.response.body.code == 200) {
+                    message.success('保存成功')
+                }else {
+                    message.error('保存失败，状态码:' + r.response.body.code)
+                }
             }
         });
     }
