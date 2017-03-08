@@ -191,17 +191,14 @@ const userDate = (obj) => {
                 select_web_url: defineSelect_web[select_web[i]].url, //关注的网站
                 select_web_name: defineSelect_web[select_web[i]].name, //网站名字
                 frequency: obj.frequency, //监控的频率
-                waitTime: obj.waitTime, //等待轮询时间
+                waitTime: obj.waitTime, //等待超时的时间
                 notice: obj.notice, //是否通知手机
                 cycleTime: obj.cycleTime, //关注的周期
                 keywords: obj.keywords, //搜索关键词
                 iphoneNumber: obj.iphoneNumber, //手机号码
                 userName: obj.userName, //用户名字
             }
-            //读取用户的超时的时间
-            waitTime = obj.waitTime;
-            devMsg('用户：' + search.userName + '开始从“' + search.select_web_name + '”抓取数据,轮询时间间隔为:' + waitTime)
-            
+            devMsg('用户：' + search.userName + '开始从“' + search.select_web_name + '”抓取数据')
             await crawler(search).then((e) => {
                 devMsg('当前用户：' + search.userName + '数据抓取完毕，执行下一个用户')
                 resolve('userDate')
