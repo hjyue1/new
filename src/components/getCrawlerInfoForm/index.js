@@ -109,7 +109,7 @@ class GetCrawlerInfoForm extends Component {
                         <FormItem {...formItemLayout} label="超时时间">   
                             <span className="ant-form-text">等待</span>
                             {getFieldDecorator('waitTime', { initialValue: waitTime })(
-                                <InputNumber min={1} max={100} />
+                                <InputNumber min={1} max={99999999} />
                             )}
                             <span className="ant-form-text"> S</span>
                         </FormItem>

@@ -190,10 +190,8 @@ const userDate = (obj) => {
             const search = {
                 select_web_url: defineSelect_web[select_web[i]].url, //关注的网站
                 select_web_name: defineSelect_web[select_web[i]].name, //网站名字
-                frequency: obj.frequency, //监控的频率
                 waitTime: obj.waitTime, //等待超时的时间
                 notice: obj.notice, //是否通知手机
-                cycleTime: obj.cycleTime, //关注的周期
                 keywords: obj.keywords, //搜索关键词
                 iphoneNumber: obj.iphoneNumber, //手机号码
                 userName: obj.userName, //用户名字
@@ -210,7 +208,7 @@ const userDate = (obj) => {
 }
 
 //检查数据是否存在并发送短信
-const handleDate = (findObj, DateItem, keywords, iphoneNumber) => {
+const handleDate = (findObj, DateItem, keywords, iphoneNumber, notice) => {
     return new Promise((resolve, reject) => {
         Shuju.find({ title: findObj.title }, function(err, docs) {
             if (!!docs.length) {
@@ -220,11 +218,16 @@ const handleDate = (findObj, DateItem, keywords, iphoneNumber) => {
                 DateItem.save(function(err, docs) {
                     devMsg(docs)
                     if (!err && docs != '') {
-                        devMsg('新数据存入数据库（' + findObj.title + '）--完毕--（准备发短信提醒）');
-                        //通知
-                        devMsg(keywords)
-                        sendAliMessage(findObj, keywords, iphoneNumber)
-                        resolve(docs)
+                        if(!notice) {
+                            devMsg('新数据存入数据库（' + findObj.title + '）--完毕--（用户不需要发送短信通知）');
+                            resolve(docs) 
+                        }else {
+                            devMsg('新数据存入数据库（' + findObj.title + '）--完毕--（准备发短信提醒）');
+                            //通知
+                            devMsg(keywords)
+                            sendAliMessage(findObj, keywords, iphoneNumber)
+                            resolve(docs)
+                        }
                     } else {
                         reject('错误')
                     }
@@ -267,7 +270,7 @@ const crawler = (search) => {
                             if (info.title.indexOf(search.keywords[j]) !== -1) {
                                 //找到了。 
                                 devMsg('找到关键词:' + search.keywords[j])
-                                await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber).catch((err) => {
+                                await handleDate(info, DateItem, search.keywords[j], search.iphoneNumber, search.notice).catch((err) => {
                                     console.log('handleDate------出错了 收集错误' + err)
                                 })
                             }
