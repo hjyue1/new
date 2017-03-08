@@ -1,19 +1,32 @@
 "use strict"
+//phantomjs 一个浏览器
 var phantomjs = require('phantomjs-prebuilt')
+
+//主要爬取功能
 var webdriverio = require('webdriverio')
+
+// webdriverio 的配置文件，指定在phantomjs浏览器环境下
 var wdOpts = { desiredCapabilities: { browserName: 'phantomjs' } }
-var MPromise = require('mpromise');
+
+//var MPromise = require('mpromise');
+
+//解析抓取回来的html
 var cheerio = require('cheerio')
+
+//发送短信组件
 var sendAliMessage = require('./SMS_serve').default;
+
 //链接数据库
 var mongoose = require('mongoose');
 var Shuju = require('./mongodb/mongodbConfig').shuju; //存储数据
 var userShuju = require('./mongodb/mongodbConfig').userShuju; //初始化用户参数
 mongoose.Promise = global.Promise;
 
+//nodejs原生事件
 var events = require('events');
 var emitter = new events.EventEmitter();
 
+//用于输入命令行
 const spawn = require('child_process').spawn;
 
 
@@ -26,17 +39,7 @@ const defineSelect_web = {
     msd2: { url: 'http://www.maishoudang.com/', name: '买手党222222' }
 }
 
-const opts = {
-    server: {
-        socketOptions: {
-            socketTimeoutMS: 0,
-            connectTimeoutMS: 0
-        }
-    }
-}
-
-const waitTime = 5000 //等待时间轮询
-const limit = 1000
+let waitTime = 5000 //等待时间轮询
 
 const getTime = () => {
     let date = new Date(),
@@ -54,17 +57,24 @@ const devMsg = (msg) => {
     console.log(getTime() + '  ---->   ' + msg)
 }
 
+
 function reConnect() {
     dbcon.on('close', function() {
-        start()
+        start()//重启打开数据库
     })
 }
-
-
 
 //打开数据库
 let openDatabase = () => {
     return new Promise((resolve, reject) => {
+        const opts = {
+            server: {
+                socketOptions: {
+                    socketTimeoutMS: 0,
+                    connectTimeoutMS: 0
+                }
+            }
+        }
         mongoose.connect('mongodb://localhost:27017/liudo_crawler', opts);
         dbcon = mongoose.connection; //获取Connection 连接对象
         dbcon.on('error', function(error) {
@@ -97,7 +107,7 @@ let openDatabase = () => {
 }
 
 //调用系统命令清理内存
-let cleanMemory = () => {
+const cleanMemory = () => {
     const clean = spawn('echo', ['1', '>', '/proc/sys/vm/drop_caches'], {
         shell: true
     });
@@ -116,7 +126,7 @@ let cleanMemory = () => {
 }
 
 //调用系统命令检查内存
-let free = () => {
+const free = () => {
     const free = spawn('free', ['-m']);
     // 捕获标准输出并将其打印到控制台 
     free.stdout.on('data', function(data) {
@@ -132,7 +142,7 @@ let free = () => {
     });
 }
 
-//递归
+//重复爬取
 emitter.on('init', function() {
     process.nextTick(function() {
         if (calcNum % 5000 == 0) {
@@ -147,7 +157,6 @@ emitter.on('init', function() {
 const init = () => {
     return new Promise((resolve, reject) => {
         userShuju.find({}, function(err, docs) {
-            //console.log(docs)
             if (docs.length > 0) {
                 let len = docs.length;
                 let start = async() => {
@@ -160,11 +169,9 @@ const init = () => {
                     }
                     devMsg('-----------------------------------操作结束');
                     setTimeout(() => { emitter.emit('init'); }, waitTime)
-                    resolve('init')
-
+                    resolve('init完成')
                 }
                 start()
-
             } else {
                 devMsg('初始化数据出错了' + err)
                 reject('错误')
@@ -184,14 +191,17 @@ const userDate = (obj) => {
                 select_web_url: defineSelect_web[select_web[i]].url, //关注的网站
                 select_web_name: defineSelect_web[select_web[i]].name, //网站名字
                 frequency: obj.frequency, //监控的频率
-                waitTime: obj.waitTime, //等待超时的时间
+                waitTime: obj.waitTime, //等待轮询时间
                 notice: obj.notice, //是否通知手机
                 cycleTime: obj.cycleTime, //关注的周期
                 keywords: obj.keywords, //搜索关键词
                 iphoneNumber: obj.iphoneNumber, //手机号码
                 userName: obj.userName, //用户名字
             }
-            devMsg('用户：' + search.userName + '开始从“' + search.select_web_name + '”抓取数据')
+            //读取用户的超时的时间
+            waitTime = obj.waitTime;
+            devMsg('用户：' + search.userName + '开始从“' + search.select_web_name + '”抓取数据,轮询时间间隔为:' + waitTime)
+            
             await crawler(search).then((e) => {
                 devMsg('当前用户：' + search.userName + '数据抓取完毕，执行下一个用户')
                 resolve('userDate')
@@ -228,18 +238,19 @@ const handleDate = (findObj, DateItem, keywords, iphoneNumber) => {
     })
 }
 
+
 //爬取操作
 const crawler = (search) => {
     return new Promise((resolve, reject) => {
         phantomjs.run('--webdriver=4444').then(program => {
             let browser = webdriverio.remote(wdOpts);
-            browser
-                .timeouts('pageLoad', 3600000)
-                .init().then(() => { devMsg('开始链接URL') })
-                .url(search.select_web_url).then(() => { devMsg('url地址是:' + search.select_web_url) })
-                .getHTML('.tb-c-li').then(async(html) => {
+            browser.timeouts('pageLoad', 10000);
+            browser.init().then(() => { devMsg('开始链接URL') })
+                .url(search.select_web_url).then(() => { devMsg('成功取回数据') })
+                .getHTML('body').then(async(body) => {
+                    let _$$ = cheerio.load(body);
+                    let html = _$$('.tb-c-li');
                     let keywordsLen = search.keywords.length
-                    devMsg('成功取回数据')
                     for (let i = 0; i < html.length; i++) {
                         let $ = cheerio.load(html[i])
                         let info = {
@@ -267,12 +278,6 @@ const crawler = (search) => {
                     }
                     program.kill();
                     resolve('crawler')
-                })
-                .on('error', function(e) {
-                    // will be executed everytime an error occurred
-                    // e.g. when element couldn't be found
-                    console.log(e.body.value.class);   // -> "org.openqa.selenium.NoSuchElementException"
-                    console.log(e.body.value.message); // -> "no such element ..."
                 })
         })
     })
