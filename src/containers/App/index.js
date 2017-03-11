@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 
 import { validation } from '../../actions/login'
-
+import { Spin, Alert } from 'antd';
 // import 'antd/dist/antd.less'
 import './index.less'
 
@@ -11,10 +11,15 @@ class App extends Component {
     static propTypes = {
     }
 
+    state = {
+    }
+
     async componentWillMount() {
         let r = await this.props.dispatch(validation())
-        if (!this.props.user.userName) {
+        if (r.response.body.code != 200) {
             browserHistory.push('/login')
+        }else {
+            
         }
     }
 
@@ -22,16 +27,15 @@ class App extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        
     }
 
 
     render() {
-    return (
-        <div>
-            {this.props.children}
-        </div>
-    )
+        return (
+            <div>
+                {this.props.children}
+            </div>
+        )
     }
 }
 

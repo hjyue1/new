@@ -85,7 +85,10 @@ var config = cookie = function(key, value, options) {
 	return result;
 };
 
-config.defaults = {};
+config.defaults = {
+	expires: 30, //默认30天
+	path: '/'
+};
 
 export function removeCookie (key, options) {
 	if (cookie(key) === undefined) {

@@ -1,14 +1,22 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
-import { logout } from '../../actions/login'
 
 import GetCrawlerInfoForm  from '../getCrawlerInfoForm'
+import Header from './header'
+import { Spin, Alert } from 'antd';
 
-
+import './index.less'
 
 class Home extends Component {
     static propTypes = {
+    }
+
+    state = {
+        loading: true
+    }
+
+    async componentWillMount() {
     }
 
     componentDidMount() {
@@ -17,28 +25,22 @@ class Home extends Component {
     componentWillReceiveProps(nextProps) {
     }
 
-    handleLogout = async (e) => {
-        let {dispatch} = this.props;
-        let r = await dispatch(logout());
-        r.response.body.code == 200 && browserHistory.push('/login')
-
-    }
-
-
     render() {
         let {user} = this.props;
 
         return (
             <div>
-                {user.userName ?
-                    <div>
-                        <a href='javascript:' onClick={this.handleLogout}>退出登录</a>
-                        <GetCrawlerInfoForm />
+                {!user.userName ?
+                    <div className="Loading">
+                        <Spin size="large">
+                        </Spin>
                     </div>
                     :
                     <div>
-                        <a href='/login' >请先登录</a>
+                        <Header />
+                        <GetCrawlerInfoForm />
                     </div>
+
                 }
             </div>
         )

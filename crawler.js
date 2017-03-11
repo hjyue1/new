@@ -207,36 +207,6 @@ const userDate = (obj) => {
     })
 }
 
-//检查数据是否存在并发送短信
-const handleDate = (findObj, DateItem, keywords, iphoneNumber, notice) => {
-    return new Promise((resolve, reject) => {
-        Shuju.find({ title: findObj.title }, function(err, docs) {
-            if (!!docs.length) {
-                devMsg('数据存在--结束--');
-                resolve(docs)
-            } else {
-                DateItem.save(function(err, docs) {
-                    devMsg(docs)
-                    if (!err && docs != '') {
-                        if(!notice) {
-                            devMsg('新数据存入数据库（' + findObj.title + '）--完毕--（用户不需要发送短信通知）');
-                            resolve(docs) 
-                        }else {
-                            devMsg('新数据存入数据库（' + findObj.title + '）--完毕--（准备发短信提醒）');
-                            //通知
-                            devMsg(keywords)
-                            sendAliMessage(findObj, keywords, iphoneNumber)
-                            resolve(docs)
-                        }
-                    } else {
-                        reject('错误')
-                    }
-                })
-            }
-
-        });
-    })
-}
 
 
 //爬取操作
@@ -280,6 +250,38 @@ const crawler = (search) => {
                     resolve('crawler')
                 })
         })
+    })
+}
+
+
+//检查数据是否存在并发送短信
+const handleDate = (findObj, DateItem, keywords, iphoneNumber, notice) => {
+    return new Promise((resolve, reject) => {
+        Shuju.find({ title: findObj.title }, function(err, docs) {
+            if (!!docs.length) {
+                devMsg('数据存在--结束--');
+                resolve(docs)
+            } else {
+                DateItem.save(function(err, docs) {
+                    devMsg(docs)
+                    if (!err && docs != '') {
+                        if(!notice) {
+                            devMsg('新数据存入数据库（' + findObj.title + '）--完毕--（用户不需要发送短信通知）');
+                            resolve(docs) 
+                        }else {
+                            devMsg('新数据存入数据库（' + findObj.title + '）--完毕--（准备发短信提醒）');
+                            //通知
+                            devMsg(keywords)
+                            sendAliMessage(findObj, keywords, iphoneNumber)
+                            resolve(docs)
+                        }
+                    } else {
+                        reject('错误')
+                    }
+                })
+            }
+
+        });
     })
 }
 

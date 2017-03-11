@@ -47,6 +47,11 @@ var config = {
       exclude: [nodeModulesPath],
       query: {
           plugins: [
+            "syntax-async-functions",
+            ["transform-async-to-module-method", {
+                        "module": "bluebird",
+                        "method": "coroutine"
+            }],
             ["react-transform", {
               transforms: [{
                 transform: "react-transform-hmr",
@@ -85,6 +90,10 @@ var config = {
   ],
   resolve: {
     // Allow to omit extensions when requiring these files
+    alias : {
+            'helpers' : path.join(__dirname, 'src/helpers'),
+            'actions' : path.join(__dirname, 'src/actions'),
+    },
     extensions: ["", ".js", ".jsx"],
   },
 

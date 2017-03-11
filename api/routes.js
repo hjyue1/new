@@ -22,15 +22,15 @@ api.post('/login', function(req, res) {
   var query_doc = {userName: req.body.userName};
   console.log(query_doc)
   User.find({userName: req.body.userName},function(err, docs){
-    console.log('err是'+err);
-    console.log(docs)
+    //console.log('err是'+err);
+    //console.log(docs)
     if(!err && docs.length >0) {
-      console.log(docs);
-      console.log(docs[0].password);
-      console.log(req.body.password);
+      //console.log(docs);
+      //console.log(docs[0].password);
+      //console.log(req.body.password);
       if(docs!='' && docs[0].password == req.body.password){
-        console.log(docs);
-        console.log('登录成功');
+        //console.log(docs);
+        console.log(docs[0].userName + '登录成功');
         req.session.sign = true;
         req.session.userName = req.body.userName;
         res.send({code:'200', msg:'登录成功', userName:docs[0].userName})
@@ -54,8 +54,8 @@ api.post('/reg', function(req, res) {
   User.find(queryid,function(err, docs){
     console.log(err);
     if(docs.length>0) {
-      console.log(docs);
-      console.log('注册失败-账户已注册');
+      //console.log(docs);
+      console.log(docs.userName + '注册失败-账户已注册');
       res.send({ code: '400' ,msg:'注册失败-账户已注册'});
     }else {
       var reg=new User();
@@ -65,8 +65,8 @@ api.post('/reg', function(req, res) {
       reg.save(function(err, docs){
         if(!err) {
           if(docs!=''){
-            console.log(docs);
-            console.log('注册成功');
+            //console.log(docs);
+            console.log(docs.userName + '注册成功');
             req.session.sign = true;
             req.session.userName = req.body.userName;
             console.log('session是:'+req.session);
@@ -92,13 +92,13 @@ api.post('/validation', function(req, res) {
   console.log('验证用户身份（session）');
   console.log(req.session.userName)
   var queryid= {userName: req.session.userName};
-  console.log(queryid);
+  //console.log(queryid);
   if(req.session.userName) {
     User.find(queryid,function(err, docs){
-      console.log(err);
+      //console.log(err);
       if(docs.length>0) {
-        console.log(docs);
-        console.log('登录成功');
+        //console.log(docs);
+        console.log(docs.userName + '登录成功');
         res.send({ code: '200', msg:'验证成功', userName: docs[0].userName});
       }
     });
