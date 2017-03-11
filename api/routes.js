@@ -55,7 +55,7 @@ api.post('/reg', function(req, res) {
     console.log(err);
     if(docs.length>0) {
       //console.log(docs);
-      console.log(docs.userName + '注册失败-账户已注册');
+      console.log(docs[0].userName + '注册失败-账户已注册');
       res.send({ code: '400' ,msg:'注册失败-账户已注册'});
     }else {
       var reg=new User();
@@ -98,7 +98,7 @@ api.post('/validation', function(req, res) {
       //console.log(err);
       if(docs.length>0) {
         //console.log(docs);
-        console.log(docs.userName + '登录成功');
+        console.log(docs[0].userName + '登录成功');
         res.send({ code: '200', msg:'验证成功', userName: docs[0].userName});
       }
     });
