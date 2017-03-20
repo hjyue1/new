@@ -199,11 +199,11 @@ const userDate = (obj) => {
             devMsg('用户：' + search.userName + '开始从“' + search.select_web_name + '”抓取数据')
             await crawler(search).then((e) => {
                 devMsg('当前用户：' + search.userName + '数据抓取完毕，执行下一个用户')
-                resolve('userDate')
             }).catch((err) => {
                 console.log('crawler------出错了 收集错误' + err)
             })
         }
+        resolve('userDate')
     })
 }
 
