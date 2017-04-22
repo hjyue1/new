@@ -161,13 +161,14 @@ const init = () => {
                 let len = docs.length;
                 let start = async() => {
                     calcNum++;
-                    devMsg('----第' + calcNum + '次-------操作开始-----------------------------------');
+                    devMsg('----第' + calcNum + '次------------------------------------------操作开始');
                     for (let i = 0; i < len; i++) {
                         await userDate(docs[i]).catch((err) => {
                             console.log('userDate------出错了 收集错误' + err)
                         })
                     }
-                    devMsg('-----------------------------------操作结束');
+                    devMsg('------------------------------------------操作结束');
+                    devMsg('--->>>>>>>>>>>>>>>>>>>>>>开始等待' + (waitTime/1000) + '秒后继续执行');
                     setTimeout(() => { emitter.emit('init'); }, waitTime)
                     resolve('init完成')
                 }
@@ -198,7 +199,7 @@ const userDate = (obj) => {
             }
             devMsg('用户：' + search.userName + '开始从“' + search.select_web_name + '”抓取数据')
             await crawler(search).then((e) => {
-                devMsg('当前用户：' + search.userName + '数据抓取完毕，执行下一个用户')
+                devMsg('用户：' + search.userName + '数据抓取完毕，执行下一个用户')
             }).catch((err) => {
                 console.log('crawler------出错了 收集错误' + err)
             })
@@ -213,9 +214,12 @@ const userDate = (obj) => {
 const crawler = (search) => {
     return new Promise((resolve, reject) => {
         phantomjs.run('--webdriver=4444').then(program => {
+            console.log('11111')
             let browser = webdriverio.remote(wdOpts);
+            console.log('22222')
             browser.timeouts('pageLoad', 10000);
-            browser.init().then(() => { devMsg('开始链接URL') })
+            console.log('33333')
+            browser.init().then(() => { devMsg('开始链接URL:' + search.select_web_url) })
                 .url(search.select_web_url).then(() => { devMsg('成功取回数据') })
                 .getHTML('body').then(async(body) => {
                     let _$$ = cheerio.load(body);
@@ -272,7 +276,7 @@ const handleDate = (findObj, DateItem, keywords, iphoneNumber, notice) => {
                             devMsg('新数据存入数据库（' + findObj.title + '）--完毕--（准备发短信提醒）');
                             //通知
                             devMsg(keywords)
-                            sendAliMessage(findObj, keywords, iphoneNumber)
+                            //sendAliMessage(findObj, keywords, iphoneNumber)
                             resolve(docs)
                         }
                     } else {
