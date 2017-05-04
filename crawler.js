@@ -212,17 +212,10 @@ const userDate = (obj) => {
 
 //爬取操作
 const crawler = (search) => {
-    console.log('44444')
     return new Promise((resolve, reject) => {
-        console.log('55555')
-        console.log(phantomjs)
-        console.log(webdriverio)
         phantomjs.run('--webdriver=4444').then(program => {
-            console.log('11111')
             let browser = webdriverio.remote(wdOpts);
-            console.log('22222')
             browser.timeouts('pageLoad', 10000);
-            console.log('33333')
             browser.init().then(() => { devMsg('开始链接URL:' + search.select_web_url) })
                 .url(search.select_web_url).then(() => { devMsg('成功取回数据') })
                 .getHTML('body').then(async(body) => {
