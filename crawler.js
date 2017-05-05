@@ -202,11 +202,11 @@ const userDate = (obj) => {
                 userName: obj.userName, //用户名字
             }
             devMsg('用户：' + search.userName + '开始从“' + search.select_web_name + '”抓取数据')
-            // await crawler(search).then((e) => {
-            //     devMsg('用户：' + search.userName + '数据抓取完毕，执行下一个用户')
-            // }).catch((err) => {
-            //     console.log('crawler------出错了 收集错误' + err)
-            // })
+            await crawler(search).then((e) => {
+                devMsg('用户：' + search.userName + '数据抓取完毕，执行下一个用户')
+            }).catch((err) => {
+                console.log('crawler------出错了 收集错误' + err)
+            })
         }
         resolve('userDate')
     },(err)=>{
@@ -222,12 +222,12 @@ const crawler = (search) => {
         phantomjs.run('--webdriver=4444').then(program => {
             let browser = webdriverio.remote(wdOpts);
             browser.timeouts('pageLoad', 10000);
-            browser.init().then(() => { devMsg('开始链接URL:' + search.select_web_url) })
+            browser.init().then(() => { devMsg('开始链接URL:' + search.select_web_url) }).catch((err) => {console.log('browser.init------出错了 收集错误' + err)})
                 .url(search.select_web_url).then(() => { 
                     devMsg('成功取回数据') 
                     program.kill();
                     resolve('crawler')
-                })
+                }).catch((err) => {console.log('browser.url------出错了 收集错误' + err)})
                 // .getHTML('body').then(async(body) => {
                 //     let _$$ = cheerio.load(body);
                 //     let html = _$$('.tb-c-li');
