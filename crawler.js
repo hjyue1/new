@@ -202,11 +202,11 @@ const userDate = (obj) => {
                 userName: obj.userName, //用户名字
             }
             devMsg('用户：' + search.userName + '开始从“' + search.select_web_name + '”抓取数据')
-            await crawler(search).then((e) => {
-                devMsg('用户：' + search.userName + '数据抓取完毕，执行下一个用户')
-            }).catch((err) => {
-                console.log('crawler------出错了 收集错误' + err)
-            })
+            // await crawler(search).then((e) => {
+            //     devMsg('用户：' + search.userName + '数据抓取完毕，执行下一个用户')
+            // }).catch((err) => {
+            //     console.log('crawler------出错了 收集错误' + err)
+            // })
         }
         resolve('userDate')
     },(err)=>{
@@ -261,6 +261,8 @@ const crawler = (search) => {
                 //     resolve('crawler')
                 // })
                 
+        }).catch((err) => {
+            console.log('phantomjs------出错了 收集错误' + err)
         })
     },(err)=>{
         console.log('crawler' + err)
