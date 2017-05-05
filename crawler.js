@@ -217,7 +217,10 @@ const crawler = (search) => {
             let browser = webdriverio.remote(wdOpts);
             browser.timeouts('pageLoad', 10000);
             browser.init().then(() => { devMsg('开始链接URL:' + search.select_web_url) })
-                .url(search.select_web_url).then(() => { devMsg('成功取回数据') })
+                .url(search.select_web_url).then(() => { 
+                    devMsg('成功取回数据') 
+                    program.kill();
+                    resolve('crawler')})
                 // .getHTML('body').then(async(body) => {
                 //     let _$$ = cheerio.load(body);
                 //     let html = _$$('.tb-c-li');
@@ -250,8 +253,7 @@ const crawler = (search) => {
                 //     program.kill();
                 //     resolve('crawler')
                 // })
-                program.kill();
-                resolve('crawler')
+                
         })
     })
 }
