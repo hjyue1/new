@@ -103,6 +103,8 @@ let openDatabase = () => {
             devMsg('disconnecting');
         });
         resolve(dbcon)
+    },(err)=>{
+        console.log('openDatabase' + err)
     })
 }
 
@@ -178,6 +180,8 @@ const init = () => {
                 reject('错误')
             }
         })
+    },(err)=>{
+        console.log('init' + err)
     })
 }
 
@@ -205,6 +209,8 @@ const userDate = (obj) => {
             })
         }
         resolve('userDate')
+    },(err)=>{
+        console.log('userDate' + err)
     })
 }
 
@@ -220,7 +226,8 @@ const crawler = (search) => {
                 .url(search.select_web_url).then(() => { 
                     devMsg('成功取回数据') 
                     program.kill();
-                    resolve('crawler')})
+                    resolve('crawler')
+                })
                 // .getHTML('body').then(async(body) => {
                 //     let _$$ = cheerio.load(body);
                 //     let html = _$$('.tb-c-li');
@@ -255,6 +262,8 @@ const crawler = (search) => {
                 // })
                 
         })
+    },(err)=>{
+        console.log('crawler' + err)
     })
 }
 
@@ -287,6 +296,8 @@ const handleDate = (findObj, DateItem, keywords, iphoneNumber, notice) => {
             }
 
         });
+    },(err)=>{
+        console.log('handleDate' + err)
     })
 }
 
