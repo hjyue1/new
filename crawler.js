@@ -35,7 +35,7 @@ let calcNum = 0; //计数
 let dbcon = null; //mongodb
 
 const defineSelect_web = {
-    msd: { url: 'http://www.maishoudang.com/', name: '买手党' },
+    msd: { url: 'http://www.baidu.com/', name: '百度' },
     msd2: { url: 'http://www.maishoudang.com/', name: '买手党222222' }
 }
 
